@@ -25,7 +25,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .glow.a{background:var(--g);top:-20vmax;left:-15vmax}.glow.b{background:var(--c);bottom:-25vmax;right:-15vmax;animation-delay:-12s}
 @keyframes drift{to{transform:translate(8vmax,6vmax)}}
 /* panels / buttons */
-.panel{background:linear-gradient(160deg,rgba(12,24,19,.85),rgba(9,19,15,.7));border:1px solid var(--ln);backdrop-filter:blur(8px);position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.panel{background:linear-gradient(160deg,rgba(12,24,19,.85),rgba(9,19,15,.7));border:1px solid var(--ln);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
 .panel::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(0,245,160,.09),transparent);transform:skewX(-20deg);transition:left .7s}
 .panel:hover{border-color:rgba(0,245,160,.55);box-shadow:0 0 28px rgba(0,245,160,.12);transform:translateY(-3px)}
 .panel:hover::before{left:130%}
@@ -55,9 +55,13 @@ input:focus,select:focus{border-color:var(--g);box-shadow:0 0 14px rgba(0,245,16
 @keyframes spin{to{transform:rotate(360deg)}}
 #introLog{font:12px/1.8 var(--mono);color:var(--g2);min-height:90px;text-align:left;z-index:2}
 #skip{position:absolute;right:20px;top:calc(20px + env(safe-area-inset-top,0px));z-index:3}
-/* nav */
+
+/* ===== NAV (fixed: backdrop-filter moved to ::before so nav is NOT a containing block for .links) ===== */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:18px 0;transition:.3s;padding-top:calc(18px + env(safe-area-inset-top,0px))}
-nav.sc{background:rgba(5,9,8,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln);padding-top:calc(9px + env(safe-area-inset-top,0px));padding-bottom:9px}
+nav::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(5,9,8,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--ln);opacity:0;transition:opacity .3s;pointer-events:none}
+nav.sc{padding-top:calc(9px + env(safe-area-inset-top,0px));padding-bottom:9px}
+nav.sc::before{opacity:1}
+nav.menu-open::before{opacity:0}
 nav .wrap{display:flex;align-items:center;justify-content:space-between}
 .logo{font:800 17px var(--sans);letter-spacing:.2em;color:var(--g);display:flex;align-items:center;gap:10px}
 .logo i{width:12px;height:12px;background:var(--g);box-shadow:0 0 14px var(--g);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
@@ -68,6 +72,9 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between}
 .links a:hover::after,.links a.act::after{transform:scaleX(1)}
 .links a.act::before{content:"";position:absolute;left:-10px;top:50%;width:5px;height:5px;border-radius:50%;background:var(--g);transform:translateY(-50%)}
 #burger{display:none;background:none;border:1px solid var(--ln);color:var(--g);padding:8px 12px;font:13px var(--mono);cursor:pointer}
+/* overlay: desktop-ზე არ არსებობს */
+#navOverlay{display:none}
+
 /* hero */
 #home{min-height:100vh;display:flex;align-items:center;padding-top:110px}
 #home .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
@@ -93,7 +100,7 @@ h1{font-size:clamp(42px,8vw,96px);margin:14px 0;line-height:1;letter-spacing:.04
 .proj{cursor:pointer;text-align:left;color:inherit;font-family:inherit}
 .proj .ico{font-size:26px}
 /* modal */
-#modal{position:fixed;inset:0;z-index:80;background:rgba(2,5,4,.7);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+#modal{position:fixed;inset:0;z-index:80;background:rgba(2,5,4,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
 #modal.open{opacity:1;pointer-events:auto}
 #mBox{max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:30px;transform:scale(.92);transition:transform .35s}
 #modal.open #mBox{transform:none}
@@ -129,12 +136,6 @@ table{border-collapse:collapse;width:100%;font:12px var(--mono)}
 th,td{padding:8px 10px;border-bottom:1px solid var(--ln);text-align:left;white-space:nowrap}th{color:var(--g)}
 #logs{font:12px/1.7 var(--mono);background:#030706;border:1px solid var(--ln);padding:12px;height:300px;overflow:auto}
 .lv-INFO{color:var(--g2)}.lv-WARNING{color:var(--amb)}.lv-ERROR{color:var(--red)}.lv-DEVICE{color:var(--c)}.lv-NETWORK{color:var(--c)}
-/* terminal */
-#term{background:#030706;border:1px solid var(--ln);height:360px;overflow:auto;padding:14px;font:13px/1.7 var(--mono);color:var(--g);cursor:text}
-#term .row{white-space:pre-wrap;word-break:break-word}
-.pr{color:var(--c)}
-#tin{background:none;border:0;color:var(--g);font:inherit;outline:0;padding:0;width:60%;box-shadow:none;caret-color:var(--g)}
-.sug{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap}
 /* team */
 .av{width:76px;height:76px;display:grid;place-items:center;font:800 26px var(--sans);color:var(--g);border:1px solid var(--g);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:radial-gradient(circle,rgba(0,245,160,.2),transparent)}
 .tm{text-align:center;padding:26px 14px}
@@ -146,7 +147,35 @@ footer a{display:block;color:var(--tx2);padding:3px 0}footer a:hover{color:var(-
 #toast.on{opacity:1}
 /* responsive */
 @media(max-width:1024px){.g4{grid-template-columns:repeat(2,1fr)}.g6,.g3{grid-template-columns:repeat(2,1fr)}#home .wrap{grid-template-columns:1fr}.dash{grid-template-columns:1fr}.side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--ln)}.side button{border-left:0;border-bottom:2px solid transparent;white-space:nowrap}.side button.act{border-bottom-color:var(--g)}}
-@media(max-width:768px){.links{position:fixed;inset:0;background:rgba(5,9,8,.97);flex-direction:column;align-items:center;justify-content:center;gap:28px;transform:translateY(-100%);transition:transform .45s cubic-bezier(.7,0,.2,1)}.links.open{transform:none}.links a{font-size:22px}#burger{display:block;position:relative;z-index:60}footer .wrap{grid-template-columns:1fr}section{padding:60px 0}}
+@media(max-width:768px){
+ /* overlay: ქვედა ფენა */
+ #navOverlay{
+  display:block;position:fixed;inset:0;z-index:45;
+  background:rgba(2,5,4,.82);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .35s,visibility 0s linear .35s;
+ }
+ #navOverlay.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .35s,visibility 0s}
+ /* ლინკები: overlay-ს ზემოთ, ცენტრში */
+ .links{
+  position:fixed;inset:0;z-index:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  background:transparent;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(-24px);
+  transition:opacity .35s,transform .45s cubic-bezier(.7,0,.2,1),visibility 0s linear .45s;
+ }
+ .links.open{
+  opacity:1;visibility:visible;pointer-events:auto;transform:none;
+  transition:opacity .35s,transform .45s cubic-bezier(.7,0,.2,1),visibility 0s;
+ }
+ .links a{font-size:22px}
+ /* ბურგერი: ყველაზე ზემოთ */
+ #burger{display:block;position:relative;z-index:2}
+ footer .wrap{grid-template-columns:1fr}
+ section{padding:60px 0}
+}
 @media(max-width:560px){.g3,.g4,.g6{grid-template-columns:1fr}.grid.team{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}.rv{opacity:1;transform:none;filter:none}.glow{display:none}}
 </style>
@@ -161,12 +190,14 @@ footer a{display:block;color:var(--tx2);padding:3px 0}footer a:hover{color:var(-
  <pre id="introLog"></pre>
 </div>
 
+<div id="navOverlay"></div>
+
 <nav id="nav"><div class="wrap">
  <a class="logo" href="#home"><i></i>GREEN FUTURE</a>
  <div class="links" id="links">
   <a href="#home">მთავარი</a><a href="#problems">ეკოლოგიური პრობლემები</a><a href="#projects">პროექტები</a><a href="#monitor">მონიტორინგი</a><a href="#team">გუნდი</a><a href="#contact">კონტაქტი</a>
  </div>
- <button id="burger" aria-label="Menu">MENU</button>
+ <button id="burger" aria-label="Menu" aria-expanded="false">MENU</button>
 </div></nav>
 
 <header id="home"><div class="wrap">
@@ -216,16 +247,10 @@ footer a{display:block;color:var(--tx2);padding:3px 0}footer a:hover{color:var(-
    </div>
    <div class="view" id="v-sensors"><div class="grid g3" id="sensList"></div><p class="mono" style="font-size:12px;color:var(--tx2)">ESP32 → Wi-Fi → API / Supabase → DASHBOARD · endpoint: <span id="apiShow"></span></p></div>
    <div class="view" id="v-logs"><div class="rng" id="logF"></div><div id="logs"></div></div>
-   <div class="view" id="v-settings"><div class="panel card"><h3>API CONFIGURATION</h3><p>Frontend-ში საიდუმლო გასაგებები არ ინახება. მიუთითეთ საჯარო endpoint (ცარიელი = გამორთული).</p>
+   <div class="view" id="v-settings"><div class="panel card"><h3>API CONFIGURATION</h3><p>Frontend-ში საიდუმლო გასაღებები არ ინახება. მიუთითეთ საჯარო endpoint (ცარიელი = გამორთული).</p>
     <input id="apiIn" placeholder="https://your-api.example/readings" style="width:100%;max-width:480px"> <button class="btn sm" id="apiBtn">CONNECT</button></div></div>
   </div>
  </div>
-</div></section>
-
-<section id="terminal"><div class="wrap">
- <div class="tag"></div><h2 class="rv">GREEN FUTURE Terminal</h2>
- <div class="sug" id="sug"></div>
- <div id="term"><div id="tout"></div><div class="row"><span class="pr">gf@control:~$ </span><input id="tin" autocomplete="off" spellcheck="false" aria-label="terminal"></div></div>
 </div></section>
 
 <section id="team" style="background:var(--bg2)"><div class="wrap">
@@ -306,12 +331,29 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clea
  draw();
 })();
 
-/* ===== NAV ===== */
-const nav=$('#nav');addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>40),{passive:true});
-$('#burger').onclick=()=>$('#links').classList.toggle('open');
-$$('#links a').forEach(a=>a.onclick=()=>$('#links').classList.remove('open'));
+/* ===== NAV + MOBILE MENU ===== */
+const nav=$('#nav');
+addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>40),{passive:true});
+
+const burger=$('#burger'),linksEl=$('#links'),navOv=$('#navOverlay');
+function setMenu(open){
+ linksEl.classList.toggle('open',open);
+ navOv.classList.toggle('open',open);
+ nav.classList.toggle('menu-open',open);
+ burger.textContent=open?'CLOSE':'MENU';
+ burger.setAttribute('aria-expanded',String(open));
+ document.body.style.overflow=open?'hidden':'';   /* სქროლის გაყინვა */
+}
+burger.onclick=()=>setMenu(!linksEl.classList.contains('open'));
+navOv.onclick=()=>setMenu(false);
+$$('#links a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+addEventListener('resize',()=>{if(innerWidth>768)setMenu(false)});
+
+/* active link highlight */
 const secs=$$('header,section'),navA=$$('#links a');
-new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id='#'+(e.target.id==='terminal'?'monitor':e.target.id);navA.forEach(a=>a.classList.toggle('act',a.getAttribute('href')===id))}}),{threshold:.4}).observe&&secs.forEach(s=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id='#'+(e.target.id==='terminal'?'monitor':e.target.id);navA.forEach(a=>a.classList.toggle('act',a.getAttribute('href')===id))}}),{threshold:.35}).observe(s));
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;navA.forEach(a=>a.classList.toggle('act',a.getAttribute('href')===id))}}),{threshold:.35});
+secs.forEach(s=>spy.observe(s));
 
 /* ===== CONTENT ===== */
 const PROBS=[['🌫','ჰაერის დაბინძურება','PM2.5 და გამონაბოლქვი აზიანებს ჯანმრთელობას.','ქალაქებში სუნთქვის დაავადებების ზრდა.','AirVision-ის ტიპის ჰაერის სენსორული ქსელი.'],
@@ -405,7 +447,7 @@ function renderSensors(){const L=$('#sensList');L.replaceChildren();const ss=Obj
 const lf=['ALL','INFO','WARNING','ERROR','DEVICE','NETWORK'];lf.forEach(f=>{const b=el('button',f==='ALL'?'act':'',f);b.onclick=()=>{logFilter=f;$$('#logF button').forEach(x=>x.classList.toggle('act',x===b));renderLogs()};$('#logF').append(b)});
 function renderLogs(){const B=$('#logs');B.replaceChildren();store.logs.filter(l=>logFilter==='ALL'||l.level===logFilter).forEach(l=>{const d=el('div','lv-'+l.level,'['+l.t.toLocaleTimeString()+'] ['+l.level+'] '+l.msg);B.append(d)});B.scrollTop=B.scrollHeight}
 /* analytics */
-MK.forEach(k=>{[$('#cmpA'),$('#cmpB')].forEach((s,i)=>{const o=el('option',0,METRICS[k][0]);o.value=k;if(i===0||true)s.append(o)})});$('#cmpB').value='';$('#cmpA').value='temperature';
+MK.forEach(k=>{[$('#cmpA'),$('#cmpB')].forEach(s=>{const o=el('option',0,METRICS[k][0]);o.value=k;s.append(o)})});$('#cmpB').value='';$('#cmpA').value='temperature';
 function renderAnalytics(){const rs=inRange(),A=$('#cmpA').value,B=$('#cmpB').value,ks=[A,B].filter(Boolean),cv=$('#cmpC');
  const ser=ks.map(k=>bucket(rs,k,70)),has=ser.some(s=>s.length);$('#cmpE').style.display=has?'none':'grid';$('#cmpT').textContent=ks.map(k=>METRICS[k][0]).join(' vs ');cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
  if(has)drawLine(cv,ser.length>1?ser:ser[0],{});
@@ -430,26 +472,6 @@ new IntersectionObserver(e=>{if(e[0].isIntersecting)renderAll()}).observe($('#mo
 log('SYSTEM','Environmental monitoring initialized');log('NETWORK','Waiting for sensor connection');log('DEVICE','No active sensor detected');log('DATA','Awaiting incoming measurements');
 $$('.chartBox canvas').forEach(cv=>cv.addEventListener('mousemove',e=>{const m=cv._m;if(!m)return;const r=cv.getBoundingClientRect(),px=e.clientX-r.left;let best=null,bd=1e9;m.series[0].forEach(p=>{const d=Math.abs(m.X(p.t)-px);if(d<bd){bd=d;best=p}});if(best)cv.title=new Date(best.t).toLocaleString()+' → '+best.v.toFixed(2)}));
 renderLogs();
-
-/* ===== TERMINAL ===== */
-(function(){
- const out=$('#tout'),inp=$('#tin'),H=[];let hi=0;
- const CMD={help:()=>['Commands: help status sensors network air water temperature clear about'],
-  status:()=>['SYSTEM: ONLINE','DATA SOURCE: '+(liveCount()?'LIVE':Object.keys(store.sensors).length?'DEMO DATA':'NONE'),'READINGS: '+store.readings.length],
-  sensors:()=>{const s=Object.values(store.sensors);return s.length?s.map(x=>x.id+' · '+(x.demo?'DEMO':'CONNECTED')+' · '+x.count+' readings'):['DEVICE NOT CONNECTED — no registered sensors']},
-  network:()=>['API: '+(store.api||'not configured'),'PATH: ESP32 → Wi-Fi → API/Supabase → DASHBOARD','STATUS: '+(liveCount()?'RECEIVING':'AWAITING DATA')],
-  about:()=>['GREEN FUTURE — concept & demo environmental monitoring platform.','Projects shown are ideas/concepts unless stated otherwise.']};
- const metric=(k,n)=>()=>{const a=store.readings.filter(r=>validNum(r[k]));if(!a.length)return[n+': -- (NO SENSOR DATA)'];const l=a[a.length-1];return[n+': '+l[k].toFixed(1)+' '+METRICS[k][1]+(l.demo?'  [DEMO DATA]':'')]};
- CMD.air=metric('airQuality','AIR');CMD.water=metric('waterQuality','WATER');CMD.temperature=metric('temperature','TEMPERATURE');
- function add(t,cls){const d=el('div','row',t);if(cls)d.className+=' '+cls;out.append(d);$('#term').scrollTop=1e9}
- async function type(lines){for(const l of lines){const d=el('div','row');out.append(d);if(reduce){d.textContent=l}else for(const ch of l){d.textContent+=ch;if(ch!==' ')await new Promise(r=>setTimeout(r,6))}$('#term').scrollTop=1e9}}
- function run(v){const c=v.trim().toLowerCase();add('gf@control:~$ '+v,'pr');if(!c)return;H.push(c);hi=H.length;if(c==='clear'){out.replaceChildren();return}
-  const f=CMD[c];type(f?f():['command not found: '+c.slice(0,40)+' (type help)'])}
- inp.addEventListener('keydown',e=>{if(e.key==='Enter'){run(inp.value);inp.value=''}else if(e.key==='ArrowUp'){if(hi>0)inp.value=H[--hi]||'';e.preventDefault()}else if(e.key==='ArrowDown'){hi=Math.min(H.length,hi+1);inp.value=H[hi]||'';e.preventDefault()}else if(e.key==='Tab'){e.preventDefault();const m=Object.keys(CMD).concat('clear').find(k=>k.startsWith(inp.value.toLowerCase())&&inp.value);if(m)inp.value=m}});
- $('#term').onclick=()=>inp.focus();
- Object.keys(CMD).concat('clear').forEach(k=>{const b=el('button','btn sm',k);b.onclick=()=>{run(k);inp.focus()};$('#sug').append(b)});
- type(['GREEN FUTURE terminal v1.0 — type "help"']);
-})();
 </script>
 </body>
 </html>
